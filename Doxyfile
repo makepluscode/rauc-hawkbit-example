@@ -18,7 +18,8 @@ GENERATE_LATEX         = NO
 HAVE_DOT               = YES
 CALL_GRAPH             = YES
 CALLER_GRAPH           = YES
-CLASS_DIAGRAMS         = YES
+# CLASS_DIAGRAMS is obsolete in recent Doxygen versions
+# Remove to silence warnings
 COLLABORATION_GRAPH    = YES
 INCLUDE_GRAPH          = YES
 INCLUDED_BY_GRAPH      = YES

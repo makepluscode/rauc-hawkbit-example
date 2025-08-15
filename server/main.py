@@ -1,6 +1,8 @@
 """
 hawkBit DDI (Direct Device Integration) API Mock Server
 
+English
+-------
 This module implements a simplified version of Eclipse hawkBit's DDI API for
 educational purposes. It demonstrates modern FastAPI patterns, async programming,
 and IoT device management concepts.
@@ -16,6 +18,23 @@ Key Learning Points:
 - File serving and binary data transfer
 - JSON data validation with Pydantic models
 - Type hints for better code documentation
+
+한국어
+-----
+이 모듈은 Eclipse hawkBit의 DDI(Direct Device Integration) API를 간소화하여
+학습용으로 구현한 예제입니다. FastAPI의 현대적인 사용 패턴, 비동기 프로그래밍,
+그리고 IoT 기기 관리 개념을 보여줍니다.
+
+Eclipse hawkBit은 분산된 기기 플릿의 펌웨어/소프트웨어 업데이트를 표준화된 방식으로
+관리할 수 있도록 도와주는 오픈소스 업데이트 서버입니다.
+
+핵심 학습 포인트:
+- IoT 기기 관리를 위한 RESTful API 설계
+- FastAPI 기반 비동기(Async) 프로그래밍
+- HTTP 상태 코드와 올바른 예외 처리
+- 파일 제공 및 바이너리 데이터 전송
+- Pydantic 모델을 활용한 JSON 데이터 검증
+- 타입 힌트를 통한 문서화와 IDE 지원 향상
 """
 
 # Standard library imports
@@ -44,15 +63,21 @@ app = FastAPI(
 class StatusReport(BaseModel):
     """
     Pydantic model for device status reports
-    
+
+    English:
     Pydantic provides automatic JSON validation, serialization/deserialization,
     and generates OpenAPI schemas. This model represents the data structure
     that devices send when reporting their update status.
-    
-    Modern Python features demonstrated:
-    - Type annotations for runtime validation
-    - Default values with proper typing
-    - Automatic JSON schema generation
+
+    한국어:
+    Pydantic은 JSON 유효성 검사, 직렬화/역직렬화를 자동으로 처리하고
+    OpenAPI 스키마를 생성합니다. 이 모델은 기기가 업데이트 상태를 보고할 때
+    전송하는 데이터 구조를 표현합니다.
+
+    Modern Python features demonstrated / 현대 파이썬 특징:
+    - 타입 주석을 통한 런타임 검증 (Type annotations)
+    - 적절한 타입의 기본값 처리
+    - 자동 OpenAPI 스키마 생성
     """
     id: str  # Deployment ID that this status report refers to
     time: str  # Timestamp when the status was recorded (ISO format recommended)
@@ -64,32 +89,37 @@ class StatusReport(BaseModel):
 async def poll_controller(controller_id: str) -> Dict[str, Any]:
     """
     DDI Polling Endpoint - Core of hawkBit's pull-based architecture
-    
-    This endpoint implements the "polling" pattern where devices regularly
-    check for available updates rather than the server pushing updates.
-    This approach is preferred in IoT because:
-    1. Devices can control when they check for updates
-    2. Works behind NAT/firewalls without port forwarding
-    3. Devices can implement their own scheduling logic
-    
-    URL Structure:
-    - /rest/v1/ddi/v1/ = hawkBit DDI API version 1 namespace
-    - controller/device/ = Resource path for device controllers
-    - {controller_id} = Unique identifier for each device
-    
-    HTTP Method: GET (idempotent operation)
-    Response: JSON containing deployment information
-    
+
+    English:
+    Implements the "polling" pattern where devices regularly check for updates
+    instead of server-side push. Preferred in IoT due to controllability, NAT-friendliness,
+    and flexible scheduling on devices.
+
+    한국어:
+    서버가 푸시하는 대신, 기기가 주기적으로 업데이트를 확인하는 "폴링" 패턴을 구현합니다.
+    이 방식은 다음 이유로 IoT 환경에서 선호됩니다:
+    1) 기기가 업데이트 확인 시점을 스스로 제어 가능
+    2) NAT/방화벽 환경에서도 포트 포워딩 없이 동작
+    3) 기기 자체의 스케줄링 로직을 적용 가능
+
+    URL Structure / URL 구성:
+    - /rest/v1/ddi/v1/ : hawkBit DDI API v1 네임스페이스
+    - controller/device/ : 컨트롤러 리소스 경로
+    - {controller_id} : 기기 고유 식별자
+
+    HTTP Method: GET (멱등 연산)
+    Response: 배포 정보가 포함된 JSON
+
     Args:
-        controller_id (str): Unique device identifier (e.g., "device001", MAC address)
-        
+        controller_id (str): 기기 식별자 (예: "device001", MAC 주소 등)
+
     Returns:
-        Dict[str, Any]: hawkBit-compatible deployment descriptor
-        
-    Modern Python features:
-    - async/await for non-blocking I/O operations
-    - Type hints with Union types for complex return types
-    - f-string formatting for readable string interpolation
+        Dict[str, Any]: hawkBit 호환 배포 설명자
+
+    Modern Python features / 현대 파이썬 특징:
+    - async/await 비동기 I/O
+    - 타입 힌트 기반 정적 분석/문서화
+    - f-string을 통한 가독성 높은 문자열 인터폴레이션
     """
     
     # In a real hawkBit server, this would:
@@ -127,23 +157,26 @@ async def poll_controller(controller_id: str) -> Dict[str, Any]:
 async def download_firmware():
     """
     File Download Endpoint - Serves binary firmware files
-    
-    This endpoint demonstrates efficient file serving in FastAPI using
-    FileResponse for streaming large files without loading them entirely
-    into memory. This is crucial for IoT scenarios where firmware files
-    can be large (several MB to GB).
-    
-    Security considerations in production:
-    - Authentication/authorization required
-    - File integrity verification (checksums)
-    - Rate limiting to prevent abuse
-    - Virus scanning for uploaded files
-    
+
+    English:
+    Demonstrates efficient file serving using FileResponse (streaming) without loading
+    entire content into memory.
+
+    한국어:
+    대용량 파일을 메모리에 모두 올리지 않고 스트리밍 방식으로 전송하는 예제입니다.
+    IoT 환경에서 수 MB~GB의 펌웨어 파일을 다룰 때 필수적입니다.
+
+    Security (prod) / 보안 고려사항(프로덕션):
+    - 인증/인가
+    - 파일 무결성 검증(체크섬)
+    - Rate limiting
+    - 업로드 파일 바이러스 스캔
+
     Returns:
-        FileResponse: Streamed binary file with appropriate headers
-        
+        FileResponse: 적절한 헤더와 함께 스트리밍 전송
+
     Raises:
-        HTTPException: 404 if file not found
+        HTTPException: 파일을 찾을 수 없을 때 404 반환
     """
     
     # Relative path to firmware file
@@ -182,34 +215,36 @@ async def report_status(
 ) -> Dict[str, str]:
     """
     Status Reporting Endpoint - Receives device feedback
-    
-    This endpoint completes the update cycle by allowing devices to report
-    the outcome of deployment attempts. This feedback is crucial for:
-    1. Monitoring deployment success rates
-    2. Debugging failed deployments
-    3. Compliance and audit trails
-    4. Automated rollback decisions
-    
-    URL Path Parameters:
-    - controller_id: Device that performed the deployment
-    - deployment_id: Which deployment this status refers to
-    
-    Request Body: StatusReport model with structured status information
-    
-    HTTP Method: POST (creates new status record)
-    
+
+    English:
+    Completes the update cycle by receiving device outcomes.
+    Useful for monitoring, debugging, auditing, and automation.
+
+    한국어:
+    기기의 배포 결과를 수집하여 업데이트 사이클을 완성합니다.
+    모니터링, 디버깅, 컴플라이언스, 자동화(롤백 결정 등)에 필수적인 정보입니다.
+
+    URL Path Parameters / 경로 매개변수:
+    - controller_id: 배포를 수행한 기기 ID
+    - deployment_id: 어떤 배포에 대한 상태인지 식별자
+
+    Request Body / 요청 본문:
+    - StatusReport 모델(JSON)로 구조화된 상태 정보 전달
+
+    HTTP Method: POST (새 상태 레코드 생성)
+
     Args:
-        controller_id (str): Device identifier
-        deployment_id (str): Deployment identifier  
-        status_report (StatusReport): Pydantic model with status details
-        
+        controller_id (str): 기기 식별자
+        deployment_id (str): 배포 식별자
+        status_report (StatusReport): 상태 상세 정보
+
     Returns:
-        Dict[str, str]: Acknowledgment message
-        
-    Modern Python patterns:
-    - Pydantic model automatic validation
-    - Structured logging for observability
-    - Clear return type annotations
+        Dict[str, str]: 수신 확인 메시지
+
+    Modern Python patterns / 현대 파이썬 패턴:
+    - Pydantic 기반 자동 검증
+    - 구조화된 로깅
+    - 명확한 반환 타입 주석
     """
     
     # In production, this would:
@@ -241,14 +276,15 @@ async def report_status(
 async def root() -> Dict[str, str]:
     """
     Health check and API information endpoint
-    
-    This endpoint serves as:
-    1. Health check for monitoring systems
-    2. API discovery for clients
-    3. Human-readable API information
-    
+
+    English:
+    Health check and API info for humans and machines.
+
+    한국어:
+    서버 상태 확인 및 API 정보를 제공하는 엔드포인트입니다.
+
     Returns:
-        Dict[str, str]: Basic server information
+        Dict[str, str]: 기본 서버 정보
     """
     return {
         "message": "hawkBit DDI API Mock Server",
@@ -263,19 +299,18 @@ async def root() -> Dict[str, str]:
 if __name__ == "__main__":
     """
     Application entry point with uvicorn ASGI server
-    
-    Uvicorn is a high-performance ASGI server that supports:
-    - Async/await Python code
-    - WebSocket connections
-    - HTTP/2 support
-    - Automatic reloading during development
-    - Production-ready performance
-    
-    Configuration explanation:
-    - "main:app" = Import 'app' from 'main' module (this file)
-    - host="0.0.0.0" = Listen on all network interfaces
-    - port=8000 = Standard development port
-    - reload=True = Auto-restart on code changes (development only)
+
+    English:
+    Starts Uvicorn to serve this FastAPI application.
+
+    한국어:
+    이 FastAPI 애플리케이션을 Uvicorn으로 실행합니다.
+
+    Configuration explanation / 설정 설명:
+    - "main:app" : 이 파일의 app 객체를 지정
+    - host="0.0.0.0" : 모든 네트워크 인터페이스 수신
+    - port=8000 : 개발 기본 포트
+    - reload=True : 코드 변경시 자동 재시작(개발용)
     """
     uvicorn.run(
         "main:app",  # Module:variable format for app discovery

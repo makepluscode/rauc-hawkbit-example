@@ -4,12 +4,20 @@
  * @author hawkBit DDI Example Project
  * @version 1.0
  * @date 2024-08-15
- * 
+ *
+ * English:
+ * Modern C++ wrapper around libcurl for HTTP. Demonstrates RAII, callbacks,
+ * STL containers, and simple blocking I/O operations.
+ *
+ * 한국어:
+ * libcurl을 현대 C++ 스타일로 래핑한 HTTP 클라이언트입니다. RAII, 콜백,
+ * STL 컨테이너 사용, 블로킹 I/O 설계를 다룹니다.
+ *
  * @dot
  * digraph HttpClientDependency {
  *   rankdir=TD;
  *   node [shape=rectangle, style=filled, fillcolor=lightblue];
- *   
+ *
  *   "HttpClient" -> "libcurl" [label="uses"];
  *   "HttpClient" -> "std::string" [label="contains"];
  *   "HttpClient" -> "std::map" [label="contains"];
@@ -18,24 +26,21 @@
  *   "HawkbitClient" -> "HttpClient" [label="composition"];
  * }
  * @enddot
- * 
- * This header defines a modern C++ wrapper around libcurl for HTTP communication.
- * It demonstrates several important C++ concepts:
- * 
- * Key C++ Learning Points:
- * - RAII (Resource Acquisition Is Initialization) pattern
- * - Modern C++ class design with proper constructor/destructor
- * - Static callback functions for C library integration
- * - STL containers (std::string, std::map) for data management
- * - Default parameter values for flexible API design
- * - Forward declarations and opaque pointers for implementation hiding
- * 
- * HTTP Client Design Patterns:
- * - Synchronous HTTP operations (blocking)
- * - Automatic memory management for responses
- * - Header parsing and management
- * - File streaming for large downloads
- * - Error handling with boolean return values
+ *
+ * Key C++ Learning Points / 핵심 C++ 학습 포인트:
+ * - RAII (Resource Acquisition Is Initialization)
+ * - Modern C++ class design (constructor/destructor)
+ * - Static callbacks for C library integration
+ * - STL containers (std::string, std::map)
+ * - Default parameter values
+ * - Opaque pointer (pimpl) for implementation hiding
+ *
+ * HTTP Client Design / HTTP 클라이언트 설계:
+ * - Synchronous (blocking) operations
+ * - Automatic memory management
+ * - Header parsing/management
+ * - Large-file streaming download
+ * - Boolean-based error handling
  */
 
 #ifndef HTTP_CLIENT_H
@@ -47,15 +52,17 @@
 
 /**
  * @struct HttpResponse
- * @brief Container for HTTP response data
- * 
- * This struct demonstrates modern C++ data organization using STL containers.
- * It encapsulates all aspects of an HTTP response in a clean, type-safe way.
- * 
- * Modern C++ features:
- * - Aggregate initialization (can use brace initialization)
- * - STL containers for automatic memory management
- * - No manual memory allocation/deallocation required
+ * @brief Container for HTTP response data / HTTP 응답 컨테이너
+ *
+ * English:
+ * Holds status code, body, and headers using STL containers.
+ *
+ * 한국어:
+ * HTTP 상태 코드, 본문, 헤더를 STL 컨테이너로 보관합니다.
+ *
+ * Modern C++ features / 현대 C++ 특징:
+ * - Aggregate initialization
+ * - 자동 메모리 관리(STL)
  */
 struct HttpResponse {
     long status_code;                               // HTTP status code (200, 404, 500, etc.)
@@ -69,18 +76,18 @@ struct HttpResponse {
 /**
  * @class HttpClient
  * @brief Modern C++ HTTP client using RAII principles
- * 
+ *
  * @dot
  * digraph HttpClientFlow {
  *   rankdir=LR;
  *   node [shape=box, style=filled];
- *   
+ *
  *   start [label="Constructor\n(curl 초기화)", fillcolor=lightgreen];
  *   get [label="GET 요청", fillcolor=lightblue];
  *   post [label="POST 요청", fillcolor=lightblue];
  *   download [label="파일 다운로드", fillcolor=lightblue];
  *   end [label="Destructor\n(curl 정리)", fillcolor=lightcoral];
- *   
+ *
  *   start -> get;
  *   start -> post;
  *   start -> download;
@@ -89,20 +96,12 @@ struct HttpResponse {
  *   download -> end;
  * }
  * @enddot
- * 
- * This class wraps libcurl (C library) in a modern C++ interface.
- * It demonstrates several important design patterns:
- * 
- * Design Patterns Demonstrated:
- * - RAII: Constructor acquires resources, destructor releases them
- * - Pimpl idiom: Private implementation details hidden via void* pointer
- * - Static callbacks: Bridge between C++ methods and C function pointers
- * - Exception safety: All operations are exception-safe
- * 
- * The class manages curl handle lifecycle automatically, preventing:
- * - Memory leaks (curl_easy_cleanup always called)
- * - Double cleanup (destructor checks for null)
- * - Resource reuse conflicts (each instance has own handle)
+ *
+ * English:
+ * Wraps libcurl with RAII, pimpl-like opaque pointer, and static callbacks.
+ *
+ * 한국어:
+ * libcurl을 RAII와 opaque 포인터, 정적 콜백으로 감싼 구현입니다.
  */
 class HttpClient {
 public:

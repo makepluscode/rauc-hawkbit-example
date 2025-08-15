@@ -1,24 +1,25 @@
 /**
  * @file hawkbit_client.h
  * @brief hawkBit DDI API 클라이언트 구현을 위한 헤더 파일
- * 
- * 이 헤더는 Eclipse hawkBit의 Device Direct Integration (DDI) API를 구현하는
- * 클라이언트 클래스를 정의합니다. IoT 기기의 firmware 업데이트 과정을 시뮬레이션합니다.
- * 
+ *
+ * English:
+ * Defines a client that simulates IoT firmware update flows via hawkBit DDI API.
+ *
+ * 한국어:
+ * hawkBit DDI API를 통해 IoT 펌웨어 업데이트 흐름을 시뮬레이션하는
+ * 클라이언트를 정의합니다.
+ *
  * 주요 C++ 학습 포인트:
- * - 객체지향 설계 패턴 (class 설계)
- * - 멤버 변수 naming convention (trailing underscore)
- * - const correctness와 reference parameter 활용
- * - STL string과 size_t 타입 활용
- * - 복합 데이터 구조체 (struct) 설계
- * - 캡슐화 (public/private 접근 제어)
- * 
+ * - 클래스 설계와 캡슐화, 멤버 네이밍 규칙(trailing underscore)
+ * - const-correctness, 참조 파라미터
+ * - STL `std::string`, `size_t` 활용
+ * - 간단한 POD `struct`와 초기화
+ *
  * hawkBit DDI API 학습 포인트:
- * - Polling 기반 업데이트 확인 방식
- * - RESTful API 엔드포인트 구조
- * - JSON 응답 데이터 파싱
- * - Binary 파일 다운로드 처리
- * - 상태 보고 (status reporting) 메커니즘
+ * - Polling 기반 업데이트 확인
+ * - RESTful 엔드포인트 구성
+ * - JSON 파싱과 바이너리 다운로드
+ * - 상태 보고(status reporting)
  */
 
 #ifndef HAWKBIT_CLIENT_H

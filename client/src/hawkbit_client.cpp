@@ -1,3 +1,16 @@
+/**
+ * @file hawkbit_client.cpp
+ * @brief hawkBit DDI 클라이언트 로직 구현 파일
+ *
+ * English:
+ * Implements the methods declared in `hawkbit_client.h` using a simple
+ * string-based JSON parsing approach and a blocking polling loop.
+ *
+ * 한국어:
+ * `hawkbit_client.h`에 선언된 메서드를 구현합니다. 간단한 문자열 기반 JSON 파싱과
+ * 블로킹 폴링 루프를 사용합니다. 실제 제품에서는 신뢰성/유지보수를 위해 JSON 라이브러리
+ * 사용(nlohmann/json 등)과 견고한 에러 처리, 비동기/스레드 설계가 권장됩니다.
+ */
 #include "hawkbit_client.h"
 #include <iostream>
 #include <sstream>
@@ -5,19 +18,41 @@
 #include <chrono>
 #include <ctime>
 
+/**
+ * @brief 생성자: 서버 URL과 컨트롤러 ID를 저장
+ *
+ * - 멤버 이니셜라이저 리스트를 사용하여 `server_url_`, `controller_id_` 초기화
+ * - `http_client_`는 기본 생성자 사용
+ */
 HawkbitClient::HawkbitClient(const std::string& server_url, const std::string& controller_id)
     : server_url_(server_url), controller_id_(controller_id) {
 }
 
+/**
+ * @brief 폴링 엔드포인트 URL 생성
+ *
+ * 완전한 URL을 조합합니다 (예: http://host/rest/v1/ddi/v1/controller/device/{id}).
+ */
 std::string HawkbitClient::build_polling_url() {
     return server_url_ + "/rest/v1/ddi/v1/controller/device/" + controller_id_;
 }
 
+/**
+ * @brief 상태 보고 엔드포인트 URL 생성
+ *
+ * 배포 ID를 포함한 완전한 URL을 조합합니다.
+ */
 std::string HawkbitClient::build_status_url(const std::string& deployment_id) {
     return server_url_ + "/rest/v1/ddi/v1/controller/device/" + controller_id_ + 
            "/deploymentBase/" + deployment_id;
 }
 
+/**
+ * @brief 서버의 배포 응답(JSON 문자열)에서 핵심 필드 추출
+ *
+ * 반환값: 파싱된 `DeploymentInfo` (없으면 `has_deployment=false`).
+ * 주의: 단순 문자열 탐색 기반 구현으로 포맷 변경에 취약합니다.
+ */
 DeploymentInfo HawkbitClient::parse_deployment_response(const std::string& json_response) {
     DeploymentInfo deployment;
     deployment.has_deployment = false;
@@ -57,6 +92,11 @@ DeploymentInfo HawkbitClient::parse_deployment_response(const std::string& json_
     return deployment;
 }
 
+/**
+ * @brief 서버에 업데이트 폴링 요청 수행
+ *
+ * 반환값: 배포 정보 (`has_deployment`가 false면 업데이트 없음).
+ */
 DeploymentInfo HawkbitClient::poll_for_updates() {
     std::cout << "Polling for updates..." << std::endl;
     
@@ -73,6 +113,11 @@ DeploymentInfo HawkbitClient::poll_for_updates() {
     }
 }
 
+/**
+ * @brief 펌웨어를 다운로드하여 로컬 경로에 저장
+ *
+ * 반환값: 성공 여부.
+ */
 bool HawkbitClient::download_firmware(const DeploymentInfo& deployment, const std::string& local_path) {
     std::cout << "Downloading firmware from: " << deployment.download_url << std::endl;
     std::cout << "Expected file size: " << deployment.file_size << " bytes" << std::endl;
@@ -88,6 +133,11 @@ bool HawkbitClient::download_firmware(const DeploymentInfo& deployment, const st
     return success;
 }
 
+/**
+ * @brief 배포 결과 상태를 서버에 보고
+ *
+ * 반환값: 성공 여부.
+ */
 bool HawkbitClient::report_status(const std::string& deployment_id, const std::string& status) {
     std::cout << "Reporting status: " << status << " for deployment: " << deployment_id << std::endl;
     
@@ -119,6 +169,12 @@ bool HawkbitClient::report_status(const std::string& deployment_id, const std::s
     }
 }
 
+/**
+ * @brief 무한 폴링 루프 실행 (학습용 구현)
+ *
+ * 루프: poll → download → report → sleep(10s)
+ * - 실제 환경에서는 종료 조건, 신호 처리, 백오프 전략 등을 추가하세요.
+ */
 void HawkbitClient::run_polling_loop() {
     std::cout << "Starting hawkBit client polling loop..." << std::endl;
     std::cout << "Controller ID: " << controller_id_ << std::endl;
