@@ -1,0 +1,268 @@
+# hawkBit DDI API Example Project - .gitignore
+# 이 파일은 git에서 추적하지 않을 파일들을 정의합니다
+
+# =============================================================================
+# C/C++ 관련 파일들
+# =============================================================================
+
+# 컴파일된 오브젝트 파일들
+*.o
+*.obj
+*.lo
+*.slo
+
+# 실행 파일들
+*.exe
+*.out
+*.app
+client/build/client
+client/client
+
+# 라이브러리 파일들
+*.a
+*.la
+*.lib
+*.so
+*.so.*
+*.dylib
+*.dll
+
+# CMake 빌드 관련 파일들
+client/build/
+client/CMakeFiles/
+client/CMakeCache.txt
+client/cmake_install.cmake
+client/Makefile
+client/compile_commands.json
+
+# =============================================================================
+# Python 관련 파일들 
+# =============================================================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+server/__pycache__/
+server/*.pyc
+
+# C extensions
+*.so
+
+# Python 가상환경들
+server/.venv/
+server/venv/
+server/env/
+server/ENV/
+server/env.bak/
+server/venv.bak/
+
+# UV 패키지 매니저 관련
+.uv/
+uv.lock
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# =============================================================================
+# IDE 및 에디터 관련 파일들
+# =============================================================================
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# JetBrains IDEs (CLion, PyCharm, IntelliJ, etc.)
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# =============================================================================
+# 운영체제 관련 파일들
+# =============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.tmp
+*.temp
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# =============================================================================
+# 프로젝트별 파일들
+# =============================================================================
+
+# 다운로드된 firmware 파일들
+downloaded_firmware.bin
+client/downloaded_firmware.bin
+*.firmware
+*.bin.downloaded
+
+# 로그 파일들
+*.log
+logs/
+client/*.log
+server/*.log
+
+# 임시 파일들
+*.tmp
+*.temp
+.tmp/
+temp/
+
+# 백업 파일들
+*.bak
+*.backup
+*.orig
+
+# 압축 파일들 (프로젝트와 관련없는)
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# =============================================================================
+# 문서 생성 관련 (선택적)
+# =============================================================================
+
+# Doxygen 생성 파일들 (이미 생성되어 있으므로 추적하지 않음)
+docs/doxygen/html/
+docs/doxygen/latex/
+docs/doxygen/xml/
+
+# LaTeX 관련
+*.aux
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.toc
+
+# =============================================================================
+# 네트워크 및 보안 관련
+# =============================================================================
+
+# 환경 변수 파일들 (비밀키 등이 포함될 수 있음)
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.crt
+
+# SSL 인증서들
+certificates/
+*.cert
+
+# =============================================================================
+# 기타
+# =============================================================================
+
+# Node.js (만약 나중에 프론트엔드가 추가된다면)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 패키지 매니저 잠금 파일들
+package-lock.json
+yarn.lock
+
+# 사용자 정의 설정 파일들
+config.local.*
+settings.local.*
+
+# 테스트 결과 파일들
+test-results/
+*.test
+test_*.xml
